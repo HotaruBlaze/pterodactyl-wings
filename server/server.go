@@ -306,6 +306,7 @@ func (s *Server) OnStateChange() {
 	if st == environment.ProcessOfflineState {
 		s.resources.Reset()
 		s.Events().Publish(StatsEvent, s.Proc())
+		s.Events().Publish(InfoEvent, s.GetGameInfo())
 	}
 
 	// If server was in an online state, and is now in an offline state we should handle

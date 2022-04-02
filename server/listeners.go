@@ -83,6 +83,7 @@ func (s *Server) processConsoleOutputEvent(v []byte) {
 func (s *Server) StartEventListeners() {
 	c := make(chan []byte, 8)
 	limit := newDiskLimiter(s)
+	restrict := 0 // Limit the gameinfo to only be sent once every 5 events.
 
 	s.Log().Debug("registering event listeners: console, state, resources...")
 	s.Environment.Events().On(c)
@@ -115,6 +116,12 @@ func (s *Server) StartEventListeners() {
 								limit.Trigger()
 							}
 							s.Events().Publish(StatsEvent, s.Proc())
+							restrict++
+							if restrict >= 5 {
+								restrict = 0
+								s.Events().Publish(InfoEvent, s.GetGameInfo())
+							}
+							// s.Events().Publish(InfoEvent, s.GetGameInfo())
 						}
 					case environment.StateChangeEvent:
 						{

@@ -66,6 +66,7 @@ func (h *Handler) listenForExpiration(ctx context.Context) {
 }
 
 var e = []string{
+	server.InfoEvent,
 	server.StatsEvent,
 	server.StatusEvent,
 	server.ConsoleOutputEvent,
